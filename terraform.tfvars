@@ -1,0 +1,7 @@
+aws_region        = "ap-southeast-2"
+ami_id            = "ami-0b8d527345fdace59"
+key_name          = "docker_c1"
+instance_type     = "t3.micro"
+vpc_cidr          = "10.0.0.0/16"
+subnet_cidr       = "10.0.1.0/24"
+availability_zone = "ap-southeast-2a"
