@@ -1,47 +1,47 @@
-resource "aws_vpc" "vpc_ec3" {
+resource "aws_vpc" "ec2-vpc" {
   cidr_block = var.vpc_cidr
 
   tags = {
-   Name = "vpc_ec3"
+   Name = "ec2-vpc"
   }
 }
 
 resource "aws_subnet" "public_sub1" {
-  vpc_id = aws_vpc.vpc_ec3.id
+  vpc_id = aws_vpc.ec2-vpc.id
   cidr_block = var.subnet_cidr
   availability_zone = var.availability_zone
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "public_sub"
+    Name = "public_sub1"
   }
 }
 
-resource "aws_internet_gateway" "igw3" {
-  vpc_id = aws_vpc.vpc_ec3.id
+resource "aws_internet_gateway" "igw6" {
+  vpc_id = aws_vpc.ec2-vpc.id
 
   tags = {
-    Name = "igw3"
+    Name = "igw6"
   }
 }
 
-resource "aws_route_table" "pub_rt1" {
- vpc_id = aws_vpc.vpc_ec3.id
+resource "aws_route_table" "pub_rt6" {
+ vpc_id = aws_vpc.ec2-vpc.id
 
  tags = {
-    Name = "pub_rt1"
+    Name = "pub_rt6"
  }
   
 }
 
 resource "aws_route_table_association" "pub_association1" {
   subnet_id      = aws_subnet.public_sub1.id
-  route_table_id = aws_route_table.pub_rt1.id
+  route_table_id = aws_route_table.pub_rt6.id
 }
 
  resource "aws_route" "pub_route1" {
-   gateway_id = aws_internet_gateway.igw3.id
-   route_table_id         = aws_route_table.pub_rt1.id
+   gateway_id = aws_internet_gateway.igw6.id
+   route_table_id         = aws_route_table.pub_rt6.id
    destination_cidr_block = "0.0.0.0/0" 
  }
 
@@ -49,10 +49,10 @@ resource "aws_route_table_association" "pub_association1" {
 
 #creating sg group
 
-resource "aws_security_group" "ec2_group" {
- name = "ec2_group"
+resource "aws_security_group" "ec2_group1" {
+ name = "ec2_group1"
  description = "Allow SSH and HTTP"
- vpc_id = aws_vpc.vpc_ec3.id
+ vpc_id = aws_vpc.ec2-vpc.id
 
 
  ingress {
@@ -80,18 +80,18 @@ resource "aws_security_group" "ec2_group" {
  }
 
  tags = { 
-   Name = "ec2_group"
+   Name = "ec2_group1"
  }
 }
 
 #creating ec2 with nginx installed
 
-resource "aws_instance" "nginx-ec3" {
+resource "aws_instance" "ec2-nginx" {
   ami = var.ami_id
   key_name = var.key_name
   instance_type = var.instance_type
   subnet_id = aws_subnet.public_sub1.id
-  vpc_security_group_ids = [aws_security_group.ec2_group.id]
+  vpc_security_group_ids = [aws_security_group.ec2_group1.id]
 
   user_data = <<-EOF
     #!/bin/bash
@@ -103,7 +103,7 @@ resource "aws_instance" "nginx-ec3" {
   EOF
 
   tags = {
-    Name = "nginx-ec3"
+    Name = "ec2-nginx"
   }
 }
  
